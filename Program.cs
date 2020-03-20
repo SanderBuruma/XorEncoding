@@ -19,7 +19,14 @@ namespace XorEncoding
 
       enum Config
       {
+         /// <summary>
+         /// The maximum length of the key value
+         /// </summary>
          MaxKeyLength = 1033,
+         /// <summary>
+         /// The number of additional prime numbers to add to allow the program to start generating a repeat count without starting with small primes
+         /// </summary>
+         AdditionalPrimes = 250,
       }
 
       [STAThread]
@@ -72,7 +79,7 @@ namespace XorEncoding
 
             //prepare primes for the next step
             List<Int32> primes = new List<Int32> { 2 };
-            for (Int32 i = 3; primes.Count() < (Int32)Config.MaxKeyLength; i += 2)
+            for (Int32 i = 3; primes.Count() < (Int32)Config.MaxKeyLength + (Int32)Config.AdditionalPrimes; i += 2)
             {
                foreach (Int32 prime in primes)
                {
@@ -111,7 +118,7 @@ namespace XorEncoding
             {
                for (Int32 j = 0; j < key[i]; j++)
                {
-                  repeats *= primes[i];
+                  repeats *= primes[i+(Int32)Config.AdditionalPrimes];
                   repeats %= 0b100_0000_0000_0000;
                   if (repeats < 1) repeats = 1;
                }
